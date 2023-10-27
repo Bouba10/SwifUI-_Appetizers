@@ -8,44 +8,63 @@
 import SwiftUI
 
 struct AppetizerDetailView: View {
+    
+    @EnvironmentObject var order : Order
+    
     let appetizer : Appetizer
+    
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack{
-            Image("asian-flank-steak")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 300, height: 225)
             
-            Text(appetizer.name)
-                .font(.title2)
-                .fontWeight(.semibold)
+            AsyncImage(url: URL(string: appetizer.imageURL)!) { image in
+                        image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 300, height: 225)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                    } placeholder: {
+                       
+                        Image("food-placeholder")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 300, height: 225)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
             
-            Text(appetizer.description)
-                .multilineTextAlignment(.center)
-                .font(.body)
-                .padding()
+            
+           
+            
+            VStack {
+                Text(appetizer.name)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                
+                Text(appetizer.description)
+                    .multilineTextAlignment(.center)
+                    .font(.body)
+                    .padding()
+            }
+            
             
             HStack(spacing:15){
                 NutritionInfo(title: "calories", value: appetizer.calories)
-                NutritionInfo(title: "Crabs", value: appetizer.calories)
-                NutritionInfo(title: "Protein", value: appetizer.calories)
+                NutritionInfo(title: "Crabs", value: appetizer.carbs)
+                NutritionInfo(title: "Protein", value: appetizer.protein)
                 
                 
             }
            
             Spacer()
             Button{
-                
+                order.add(item: appetizer)
+                dismiss()
             }label: {
                 Text("$\(appetizer.price , specifier: "%.2f") - Add to Order ")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .frame(width:280 ,height: 50 ,alignment: .center)
-                    .background(.green)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .padding(.bottom , 30)
+                    .buttonStyle()
             }
           
         }
@@ -55,18 +74,9 @@ struct AppetizerDetailView: View {
         .shadow(radius: 40)
         .overlay(alignment : .topTrailing) {
             Button{
-                
+                dismiss()
             }label: {
-                ZStack{
-                    Circle()
-                        .frame(width: 30)
-                        .foregroundStyle(.white)
-                        .opacity(0.6)
-                    
-                    Image(systemName: "xmark")
-                        .frame(width: 44 , height: 44 ,alignment: .center)
-                        .fontWeight(.bold)
-                }
+                AP_XButton()
                
             }
         }
@@ -76,6 +86,7 @@ struct AppetizerDetailView: View {
 
 #Preview {
     AppetizerDetailView(appetizer: MockData.sampleAppetizer)
+       
 }
 
 struct NutritionInfo: View {
@@ -94,6 +105,21 @@ struct NutritionInfo: View {
                 .foregroundStyle(.secondary)
                 .italic()
             
+        }
+    }
+}
+
+struct AP_XButton: View {
+    var body: some View {
+        ZStack{
+            Circle()
+                .frame(width: 30)
+                .foregroundStyle(.white)
+                .opacity(0.6)
+            
+            Image(systemName: "xmark")
+                .frame(width: 44 , height: 44 ,alignment: .center)
+                .fontWeight(.bold)
         }
     }
 }

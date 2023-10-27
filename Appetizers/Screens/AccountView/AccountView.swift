@@ -1,3 +1,4 @@
+
 //
 //  AccountView.swift
 //  Appetizers
@@ -8,14 +9,45 @@
 import SwiftUI
 
 struct AccountView: View {
+    
+    @ObservedObject var user : User
+   
+    
     var body: some View {
         NavigationStack {
-            Text("Acccount")
+            Form{
+                Section("Personal Info") {
+                    TextField("First Name", text: $user.firstName)
+                    TextField("Lst Name", text: $user.lastName)
+                    TextField("Email", text: $user.email)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                  
+                    DatePicker("Birthday", selection: $user.birthdate ,displayedComponents: [.date])
+                    
+                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                        Text("Save Changes")
+                    })
+                    .disabled(user.disableForm)
+                    
+                }
+                
+                Section("requests"){
+                    Toggle("Extra Napkins", isOn: $user.extraNapkins)
+                       
+                    Toggle("Frequent Refills", isOn: $user.frequentRefills)
+                    
+                } .tint(Color("AccentColor"))
+                
+            }
+            
+            
+            
                 .navigationTitle("👨🏿 Account")
         }
     }
 }
 
 #Preview {
-    AccountView()
+    AccountView(user: User())
 }

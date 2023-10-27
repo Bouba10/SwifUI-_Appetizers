@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct AppetizerTabView: View {
+    @ObservedObject var user: User
+   
     var body: some View {
         TabView {
             AppetizerListView()
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            
-            AccountView()
+          
+            AccountView(user: user)
                 .tabItem { Label("Account", systemImage: "person") }
             
             OrderView()
@@ -25,5 +27,5 @@ struct AppetizerTabView: View {
 }
 
 #Preview {
-    AppetizerTabView()
+    AppetizerTabView(user: User())
 }

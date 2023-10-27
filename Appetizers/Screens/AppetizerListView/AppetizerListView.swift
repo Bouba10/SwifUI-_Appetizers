@@ -13,6 +13,7 @@ struct AppetizerListView: View {
     
     @State private var appetizers = [Appetizer]()
     
+    
     var body: some View {
         NavigationStack {
             List(appetizers){ appetizer in
@@ -20,7 +21,13 @@ struct AppetizerListView: View {
                
                 NavigationLink{
                     
-                    AppetizerDetailView(appetizer: appetizer)
+                    ZStack {
+                        Rectangle()
+                            .background(.green)
+                            .frame(maxWidth: .infinity , maxHeight:.infinity)
+                        .blur(radius: 20, opaque: false)
+                        AppetizerDetailView(appetizer: appetizer)
+                    }
                     
                 }label: {
                     AppatizerListCell(appetizer: appetizer)
@@ -42,5 +49,6 @@ struct AppetizerListView: View {
 
 #Preview {
     AppetizerListView()
+    
 }
 
