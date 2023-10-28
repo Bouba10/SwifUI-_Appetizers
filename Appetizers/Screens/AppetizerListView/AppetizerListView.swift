@@ -18,6 +18,7 @@ struct AppetizerListView: View {
         NavigationStack {
             List(appetizers){ appetizer in
                 
+                   
                
                 NavigationLink{
                     
@@ -31,7 +32,8 @@ struct AppetizerListView: View {
                     
                 }label: {
                     AppatizerListCell(appetizer: appetizer)
-                }
+                        
+                } .listRowSeparator(.hidden)
             }
             .task {
                 do {
@@ -40,7 +42,8 @@ struct AppetizerListView: View {
                     print("Error fetching appetizers: \(error)")
                 }
             }
-                .navigationTitle("🍟 Appetizers")
+            .navigationTitle("🍟 Appetizers")
+            .listStyle(.plain)
             
         }
     }

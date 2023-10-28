@@ -11,6 +11,12 @@ import SwiftUI
 struct AccountView: View {
     
     @ObservedObject var user : User
+    
+    @FocusState var focusedTextField : FormTextField?
+    
+    enum  FormTextField {
+        case firstName , lastName ,email
+    }
    
     
     var body: some View {
@@ -18,8 +24,19 @@ struct AccountView: View {
             Form{
                 Section("Personal Info") {
                     TextField("First Name", text: $user.firstName)
+                        .focused($focusedTextField, equals: .firstName)
+                        .onSubmit { focusedTextField = .lastName }
+                        .submitLabel(.next)
+                    
                     TextField("Lst Name", text: $user.lastName)
+                        .focused($focusedTextField, equals: .lastName)
+                        .onSubmit { focusedTextField = .email }
+                        .submitLabel(.next)
+                    
                     TextField("Email", text: $user.email)
+                        .focused($focusedTextField, equals: .email)
+                        .onSubmit { focusedTextField = nil }
+                        .submitLabel(.continue)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                   
@@ -40,9 +57,13 @@ struct AccountView: View {
                 } .tint(Color("AccentColor"))
                 
             }
-            
-            
-            
+            .toolbar{
+                ToolbarItemGroup(placement: .keyboard) {
+                    Button("Done"){
+                        focusedTextField = nil
+                    }
+                }
+            }
                 .navigationTitle("👨🏿 Account")
         }
     }
